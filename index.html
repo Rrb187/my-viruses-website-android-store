@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Horror Store Web</title>
+  <meta name="description" content="Horror temalı indirilebilir paketler – Mega ve GitHub Releases linkleri" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --red:#ff0a4b;     /* Üst şerit */
+      --blue:#0818ff;    /* Arka plan panel */
+      --neon:#7bfd00;    /* Buton/çerçeve yeşili */
+      --ink:#0a0a0a;     /* Yazı */
+    }
+    body{font-family: ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,Apple Color Emoji,Segoe UI Emoji;}
+    .neon-border{ box-shadow: 0 0 0 2px var(--neon) inset; }
+  </style>
+</head>
+<body class="bg-white text-[var(--ink)]">
+
+  <!-- ÜST BAŞLIK -->
+  <header class="w-full" style="background:var(--red)">
+    <div class="max-w-6xl mx-auto px-4 py-6">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-wide text-white drop-shadow">My Horror Store <span class="align-top text-sm font-semibold">web</span></h1>
+    </div>
+  </header>
+
+  <!-- MAVİ PANEL -->
+  <section class="py-10">
+    <div class="max-w-6xl mx-auto px-4 rounded-2xl p-6 sm:p-8" style="background:var(--blue)">
+
+      <!-- Üst bilgi ve klasör butonu -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <p class="text-white/90">Paketleri aşağıdaki kutulardan indirebilirsin. Her kutuda dosya adı ve indirme butonu var.</p>
+        <a id="folderBtn" href="#" target="_blank" class="inline-flex items-center justify-center rounded-xl px-4 py-2 font-semibold text-black" style="background:var(--neon)">Mega klasörünü aç</a>
+      </div>
+
+      <!-- GRID -->
+      <div id="grid" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    </div>
+  </section>
+
+  <footer class="py-8 text-center text-sm text-gray-500">© <span id="y"></span> My Horror Store • Static site</footer>
+
+  <script>
+    // ======== AYARLAR ========
+    // (1) Klasör linkin – İstersen boş bırak.
+    const MEGA_FOLDER = "https://mega.nz/folder/IYZzQD7b#wn9f-hVM_iqO8ZPAVWBymw"; // ← Senin verdiğin
+
+    // (2) Paket listesi – buraya istediklerini ekle. Her öğe bir kare (kart) olur.
+    // link: Tek dosya Mega linki, GitHub Releases linki veya doğrudan .zip URL'si olabilir.
+    // img: Dosya görseli (boş bırakırsan mavi kutu ikon çıkar).
+    const PACKAGES = [
+      // ÖRNEKLER – düzenleyip çoğalt
+      { name: "Tom.exe (Fake)", desc: "Korku efekti – şaka amaçlı", link: MEGA_FOLDER, img: "" },
+      { name: "DS_187",        desc: "Sahte virüs – ses/görsel",   link: MEGA_FOLDER, img: "" },
+      { name: "My Horror APK", desc: "Android paket",            link: MEGA_FOLDER, img: "" },
+      { name: "Wallpaper Pack",desc: "Korku duvar kağıtları",     link: MEGA_FOLDER, img: "" },
+      { name: "Sound FX",      desc: "Jumpscare sesleri",         link: MEGA_FOLDER, img: "" },
+      { name: "Toolbox",       desc: "Araçlar ve kaynaklar",      link: MEGA_FOLDER, img: "" },
+    ];
+
+    // ======== GÖRÜNÜM OLUŞTUR ========
+    const grid = document.getElementById('grid');
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const folderBtn = document.getElementById('folderBtn');
+    if (MEGA_FOLDER) folderBtn.href = MEGA_FOLDER; else folderBtn.classList.add('hidden');
+
+    const placeholderSVG =
+      '<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">\
+        <rect width="200" height="140" fill="none" stroke="#7bfd00" stroke-width="3"/>\
+        <path d="M35 90h130M60 70h80M50 50h100" stroke="#7bfd00" stroke-width="6" stroke-linecap="round"/>\
+      </svg>';
+
+    function cardTemplate(pkg){
+      const imgHTML = pkg.img
+        ? `<img src="${pkg.img}" alt="${pkg.name}" class="w-full h-40 object-cover rounded-xl">`
+        : `<div class="w-full h-40 rounded-xl flex items-center justify-center bg-[rgba(0,0,0,0.25)]">${placeholderSVG}</div>`;
+
+      return `
+        <div class="bg-[rgba(0,0,0,0.15)] rounded-2xl p-4 neon-border">
+          <div class="rounded-xl mb-3">${imgHTML}</div>
+          <h3 class="text-white text-lg font-semibold">${pkg.name}</h3>
+          ${pkg.desc ? `<p class="text-white/80 text-sm mt-1">${pkg.desc}</p>` : ''}
+          <div class="mt-4 flex items-center justify-between">
+            <a href="${pkg.link}" target="_blank" class="inline-flex items-center justify-center px-4 py-2 rounded-xl font-semibold text-black" style="background:var(--neon)">Download</a>
+            <a href="${pkg.link}" target="_blank" class="text-white/70 text-xs underline">Aç (yedek)</a>
+          </div>
+        </div>`;
+    }
+
+    function render(){
+      grid.innerHTML = PACKAGES.map(cardTemplate).join('');
+    }
+
+    render();
+  </script>
+</body>
+</html>
